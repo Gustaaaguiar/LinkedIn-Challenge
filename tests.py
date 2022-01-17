@@ -1,22 +1,16 @@
-import qrcode
-from PIL import Image
-from pyzbar.pyzbar import decode
-# read QR code
-# read = decode(Image.open('qrcode.png'))
-# print(read[0].data)
+from openpyxl import load_workbook
+
+workbook = load_workbook(filename='products.xlsx')
+sheet = workbook.active
+
+column = sheet['A']
+print(len(column))
 
 
-# generate QR code
-
-qr = qrcode.QRCode(
-    version=1,
-    error_correction=qrcode.constants.ERROR_CORRECT_H,
-    box_size=10,
-    border=2,
-)
-
-qr.add_data('Just some random text')
-qr.make(fit=True)
-img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
-
-img.save("sample.png")
+# row = 3
+# sheet[f"B3"] = 'item_name'
+# sheet[f"C3"] = 'item_price'
+# sheet[f"D3"] = 'item_quantity'
+#
+#
+# workbook.save(filename="products.xlsx")

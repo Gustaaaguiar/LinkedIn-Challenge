@@ -1,5 +1,6 @@
 import random
 import qrcode
+from openpyxl import load_workbook
 
 # declaring the variables globally
 item_name = ''
@@ -33,7 +34,7 @@ def set_price():  # Everything is ok!
 def set_quantity():  # Everything is ok!
     global item_quantity
     try:  # error handling
-        item_quantity = int(input('Type the quantity to be sold: '))
+        item_quantity = int(input('Type the quantity available: '))
     except ValueError:  # error when you try to insert a non number inside a float or int
         print('The value inserted was does not correspond to an integer')
         set_quantity()
@@ -68,6 +69,18 @@ def create_qr():
     img.save(f'product {item_ID}.png')  # saves the image as and .png file
 
 
+def add_to_spreadsheet():
+    workbook = load_workbook(filename='products.xlsx')
+    sheet = workbook.active
+    column = sheet['B']
+    last_column = len(column)+1
+    sheet[f"B{last_column}"] = item_name.lower()
+    sheet[f"C{last_column}"] = item_price
+    sheet[f"D{last_column}"] = item_quantity
+    sheet[f"E{last_column}"] = item_ID
+    workbook.save(filename='products.xlsx')
+
+
 def product_registration():  # register the product function
     global item_name, item_description, item_price, item_quantity, item_ID
     set_name()
@@ -76,6 +89,7 @@ def product_registration():  # register the product function
     set_quantity()
     set_ID()
     create_qr()
+    add_to_spreadsheet()
 
 
 product_registration()
