@@ -23,7 +23,7 @@ def remove(sheet, row):
     sheet.delete_rows(row[0].row, 1)
 
 
-def checking():
+def checking():  # check if there's any empty cell and delete it
     workbook = load_workbook(filename='products.xlsx', data_only=True)
     sheet = workbook.active
 
@@ -33,7 +33,7 @@ def checking():
     workbook.save(filename='products.xlsx')
 
 
-def set_name():  # Everything is ok!
+def set_name():
     global item_name
     item_name = input('Type the product name: ')  # add a function to not allow the name to be null
     item_name.lower()
@@ -51,7 +51,7 @@ def set_name():  # Everything is ok!
                 exit()
 
 
-def set_price():  # Everything is ok!
+def set_price():
     global item_price
     try:  # error handling
         item_price = float(input('Type the price of the product: ').replace(',', '.'))
@@ -63,7 +63,7 @@ def set_price():  # Everything is ok!
         set_price()
 
 
-def set_quantity():  # Everything is ok!
+def set_quantity():
     global item_quantity
     try:  # error handling
         item_quantity = int(input('Type the quantity available: '))
@@ -75,7 +75,7 @@ def set_quantity():  # Everything is ok!
             set_quantity()
 
 
-def set_ID():  # Everything is ok!
+def set_ID():
     global item_ID
     ID = ''
 
@@ -98,25 +98,25 @@ def create_qr():
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
 
-    img.save(f'qrcodes/product {item_ID}.png')  # saves the image as and .png file
+    img.save(f'qrcodes/product {item_ID}.png')  # saves the image as and .png file on the folder qrcodes
 
 
 def add_to_spreadsheet():
     workbook = load_workbook(filename='products.xlsx')
-    sheet = workbook.active
+    sheet = workbook.active  # open the spreadsheet and detects in what page it is
 
     column = sheet['B']
-    last_column = len(column)+1
+    last_column = len(column)+1  # check the last completed cell and start appending data on the next
 
-    sheet[f"B{last_column}"] = item_name.lower()
+    sheet[f"B{last_column}"] = item_name.lower()  # always append the name with lower case to make checking easier
     sheet[f"C{last_column}"] = item_price
     sheet[f"D{last_column}"] = item_quantity
     sheet[f"E{last_column}"] = item_ID
 
-    workbook.save(filename='products.xlsx')
+    workbook.save(filename='products.xlsx')  # save the spreadsheet
 
 
-def product_registration():  # register the product function
+def product_registration():  # just run all the important functions
     global item_name, item_description, item_price, item_quantity, item_ID
     checking()
     set_name()

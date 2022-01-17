@@ -5,3 +5,4 @@
 # add a system to sell the items and automatically calculate the final price and remove the right quantity of the
 # spreadsheet
 
+# check if there's a product with the same ID and change the ID
