@@ -131,4 +131,4 @@ def product_registration():  # just run all the important functions
 product_registration()
 
 print(f'Item name: {item_name}\nItem description: {item_description}\nItem price: {item_price}\nItem quantity: '
-      f'{item_quantity}\nItem ID: {item_ID}')
+      f'{item_quantity}\nItem ID: {item_ID}')  # print the data inserted to ease the view of it
