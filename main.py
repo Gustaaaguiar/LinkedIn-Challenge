@@ -142,14 +142,14 @@ def product_registration():  # just run all the important functions
 
 def loop():
     choice = input('Do you want to register another product? y/n')
-
+    # add a loop to the user select if he/she wants to register another product
     if choice.lower() == 'y':
         product_registration()
     elif choice.lower() == 'n':
         exit()
     else:
         print('Please insert a valid answer')
-        loop()
+        loop()  # calls the function again if the user insert something else thank 'y' or 'n'
 
 
 product_registration()
