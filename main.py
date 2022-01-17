@@ -84,6 +84,15 @@ def set_ID():
         ID += str(number)  # get the 'number' variable and append it to the 'ID' variable
     item_ID = f'#{ID}'  # just put a '#' before the ID
 
+    workbook = load_workbook(filename='products.xlsx', data_only=True)
+    sheet = workbook.active
+
+    for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):  # check if the ID is available and change
+        # if needed
+        for products in items:
+            if item_ID == products:
+                set_ID()
+
 
 def create_qr():
     qr = qrcode.QRCode(
@@ -127,8 +136,21 @@ def product_registration():  # just run all the important functions
     create_qr()
     add_to_spreadsheet()
 
+    print(f'Item name: {item_name}\nItem description: {item_description}\nItem price: {item_price}\nItem quantity: '
+          f'{item_quantity}\nItem ID: {item_ID}')  # print the data inserted to ease the view of it
+
+
+def loop():
+    choice = input('Do you want to register another product? y/n')
+
+    if choice.lower() == 'y':
+        product_registration()
+    elif choice.lower() == 'n':
+        exit()
+    else:
+        print('Please insert a valid answer')
+        loop()
+
 
 product_registration()
 
-print(f'Item name: {item_name}\nItem description: {item_description}\nItem price: {item_price}\nItem quantity: '
-      f'{item_quantity}\nItem ID: {item_ID}')  # print the data inserted to ease the view of it
