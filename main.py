@@ -10,13 +10,45 @@ item_quantity = 0
 item_ID = ''
 
 
+def remove(sheet, row):
+    # iterate the row object
+    for cell in row:
+        # check the value of each cell in
+        # the row, if any of the value is not
+        # None return without removing the row
+        if cell.value != None:
+            return
+    # get the row number from the first cell
+    # and remove the row
+    sheet.delete_rows(row[0].row, 1)
+
+
+def checking():
+    workbook = load_workbook(filename='products.xlsx', data_only=True)
+    sheet = workbook.active
+
+    for row in sheet:
+        remove(sheet, row)
+
+    workbook.save(filename='products.xlsx')
+
+
 def set_name():  # Everything is ok!
     global item_name
     item_name = input('Type the product name: ')  # add a function to not allow the name to be null
-
+    item_name.lower()
     if item_name == '':
         print('Name cannot be null')
         set_name()
+
+    workbook = load_workbook(filename='products.xlsx', data_only=True)
+    sheet = workbook.active
+
+    for items in sheet.iter_cols(min_col=2, max_col=2, values_only=True):
+        for products in items:
+            if item_name == products:
+                print('Product already registered')
+                exit()
 
 
 def set_price():  # Everything is ok!
@@ -66,23 +98,27 @@ def create_qr():
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
 
-    img.save(f'product {item_ID}.png')  # saves the image as and .png file
+    img.save(f'qrcodes/product {item_ID}.png')  # saves the image as and .png file
 
 
 def add_to_spreadsheet():
     workbook = load_workbook(filename='products.xlsx')
     sheet = workbook.active
+
     column = sheet['B']
     last_column = len(column)+1
+
     sheet[f"B{last_column}"] = item_name.lower()
     sheet[f"C{last_column}"] = item_price
     sheet[f"D{last_column}"] = item_quantity
     sheet[f"E{last_column}"] = item_ID
+
     workbook.save(filename='products.xlsx')
 
 
 def product_registration():  # register the product function
     global item_name, item_description, item_price, item_quantity, item_ID
+    checking()
     set_name()
     item_description = input('Type a description for the product (optional): ')
     set_price()

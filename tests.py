@@ -1,16 +1,7 @@
-from openpyxl import load_workbook
+# add users with password to be able to add products
 
-workbook = load_workbook(filename='products.xlsx')
-sheet = workbook.active
+# add a loop to be able to register as many items as he/she wants
 
-column = sheet['A']
-print(len(column))
+# add a system to sell the items and automatically calculate the final price and remove the right quantity of the
+# spreadsheet
 
-
-# row = 3
-# sheet[f"B3"] = 'item_name'
-# sheet[f"C3"] = 'item_price'
-# sheet[f"D3"] = 'item_quantity'
-#
-#
-# workbook.save(filename="products.xlsx")
