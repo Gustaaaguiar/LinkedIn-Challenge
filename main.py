@@ -25,6 +25,9 @@ def set_price():  # Everything is ok!
     except ValueError:  # error when you try to insert a non number inside a float or int
         print('The value inserted was does not correspond to a number')
     item_price = "{:.2f}".format(item_price)  # force to print the number with 2 decimal places
+    if item_price == '':
+        print('Price cannot be null')
+        set_price()
 
 
 def set_quantity():  # Everything is ok!
@@ -34,6 +37,9 @@ def set_quantity():  # Everything is ok!
     except ValueError:  # error when you try to insert a non number inside a float or int
         print('The value inserted was does not correspond to an integer')
         set_quantity()
+        if item_quantity == '':
+            print('Quantity cannot be null')
+            set_quantity()
 
 
 def set_ID():  # Everything is ok!
@@ -50,11 +56,11 @@ def create_qr():
     qr = qrcode.QRCode(
         version=1,  # determines the size of the qrcode
         error_correction=qrcode.constants.ERROR_CORRECT_H,
-        box_size=10,  # determines the size of the boxes
+        box_size=4,  # determines the size of the boxes
         border=2,  # determines the thickness of the border
     )
 
-    qr.add_data(f'Item name: {item_name}\nItem description: {item_description}\nItem price: {item_price}\n'
+    qr.add_data(f'Item name: {item_name}\nItem description: {item_description}\nItem price: R${item_price}\n'
                 f'Item quantity: {item_quantity}\nItem ID: {item_ID}')  # add the content to the qrcode
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
