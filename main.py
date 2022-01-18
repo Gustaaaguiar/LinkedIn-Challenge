@@ -1,6 +1,7 @@
 import random
 import qrcode
 from openpyxl import load_workbook
+import secrets
 
 # declaring the variables globally
 item_name = ''
@@ -8,6 +9,30 @@ item_description = ''
 item_price = 0
 item_quantity = 0
 item_ID = ''
+special_char = '!@#$%&*-+?='
+letters = 'abcdefghijklmnopqrstuvwxyz'
+numbers = '0123456789'
+
+
+def register_user():
+    user = str(input('Insert the username: '))  # register the username
+    regis = int(input('You want to:\n1-Use your password \n2-Use an auto generated password '))
+
+    if regis == 1:
+        password = str(input('Insert the password: '))
+        print(f'Your password is: {password}')  # register the password
+
+    elif regis == 2:
+        alphabet = letters + letters.upper() + special_char + numbers
+        password = ''.join(secrets.choice(alphabet) for i in range(10))  # generate password with the number of
+        # digits I want
+        print(f'Your password is: {password}')  # register the password
+
+    else:
+        print('please select a valid answer')
+        register_user()
+
+    print(f'The username is: {user}\nThe password is: {password}')
 
 
 def remove(sheet, row):
@@ -153,4 +178,3 @@ def loop():
 
 
 product_registration()
-
