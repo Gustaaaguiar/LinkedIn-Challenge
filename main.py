@@ -14,10 +14,23 @@ letters = 'abcdefghijklmnopqrstuvwxyz'
 numbers = '0123456789'
 
 
+def loop():
+    choice = input('Do you want to register another product? y/n\n')
+    # add a loop to the user select if he/she wants to register another product
+    if choice.lower() == 'y':
+        product_registration()
+    elif choice.lower() == 'n':
+        exit()
+    else:
+        print('Please insert a valid answer')
+        loop()  # calls the function again if the user insert something else thank 'y' or 'n'
+
+
 def register_user():
     username = str(input('Insert the username: '))  # register the username
     regis = int(input('You want to:\n1-Use your password \n2-Use an auto generated password '))
     password = ''
+
     if regis == 1:
         password = str(input('Insert the password: '))
         print(f'Your password is: {password}')  # register the password
@@ -71,9 +84,9 @@ def set_name():
 
     for items in sheet.iter_cols(min_col=2, max_col=2, values_only=True):
         for products in items:
-            if item_name == products:
+            if products == item_name:
                 print('Product already registered')
-                exit()
+                loop()
 
 
 def set_price():
@@ -163,18 +176,7 @@ def product_registration():  # just run all the important functions
 
     print(f'Item name: {item_name}\nItem description: {item_description}\nItem price: {item_price}\nItem quantity: '
           f'{item_quantity}\nItem ID: {item_ID}')  # print the data inserted to ease the view of it
-
-
-def loop():
-    choice = input('Do you want to register another product? y/n')
-    # add a loop to the user select if he/she wants to register another product
-    if choice.lower() == 'y':
-        product_registration()
-    elif choice.lower() == 'n':
-        exit()
-    else:
-        print('Please insert a valid answer')
-        loop()  # calls the function again if the user insert something else thank 'y' or 'n'
+    loop()
 
 
 product_registration()
