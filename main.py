@@ -15,16 +15,16 @@ numbers = '0123456789'
 
 
 def register_user():
-    user = str(input('Insert the username: '))  # register the username
+    username = str(input('Insert the username: '))  # register the username
     regis = int(input('You want to:\n1-Use your password \n2-Use an auto generated password '))
-
+    password = ''
     if regis == 1:
         password = str(input('Insert the password: '))
         print(f'Your password is: {password}')  # register the password
 
     elif regis == 2:
         alphabet = letters + letters.upper() + special_char + numbers
-        password = ''.join(secrets.choice(alphabet) for i in range(10))  # generate password with the number of
+        password = password.join(secrets.choice(alphabet) for i in range(10))  # generate password with the number of
         # digits I want
         print(f'Your password is: {password}')  # register the password
 
@@ -32,7 +32,7 @@ def register_user():
         print('please select a valid answer')
         register_user()
 
-    print(f'The username is: {user}\nThe password is: {password}')
+    print(f'The username is: {username}\nThe password is: {password}')
 
 
 def remove(sheet, row):
