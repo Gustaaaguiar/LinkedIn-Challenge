@@ -4,11 +4,6 @@
 # spreadsheet
 # half done
 
-# transform the excel into a data frame to be able to handle it easier and doesn't return error when trying to add a
-#product while the excel is open
 
+# read qrcode
 
-import os
-os.chdir('..')
-
-print(os.getcwd())

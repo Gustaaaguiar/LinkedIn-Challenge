@@ -3,6 +3,7 @@ import qrcode
 from openpyxl import load_workbook
 import secrets
 import os
+import pandas as pd
 
 # declaring the variables globally
 item_name = ''
@@ -16,16 +17,27 @@ numbers = '0123456789'
 path_file = 'products.xlsx'
 
 
+def choices(choice):
+    out = 0
+    if choice.lower() == 'y':
+        out = 1
+    elif choice.lower() == 'n':
+        out = 2
+    else:
+        print('Please insert a valid answer')
+        choices(choice)
+
+    return out
+
+
 def loop():
     choice = input('Do you want to register another product? y/n\n')
     # add a loop to the user select if he/she wants to register another product
-    if choice.lower() == 'y':
+    x = choices(choice)
+    if x == 1:
         product_registration()
-    elif choice.lower() == 'n':
+    elif x == 2:
         exit()
-    else:
-        print('Please insert a valid answer')
-        loop()  # calls the function again if the user insert something else thank 'y' or 'n'
 
 
 def register_user():
@@ -156,7 +168,7 @@ def add_to_spreadsheet():
     sheet = workbook.active  # open the spreadsheet and detects in what page it is
 
     column = sheet['B']
-    last_column = len(column)+1  # check the last completed cell and start appending data on the next
+    last_column = len(column) + 1  # check the last completed cell and start appending data on the next
 
     sheet[f"B{last_column}"] = item_name.lower()  # always append the name with lower case to make checking easier
     sheet[f"C{last_column}"] = item_price
@@ -182,5 +194,37 @@ def product_registration():  # just run all the important functions
     loop()
 
 
+def sell():  # wip
+    workbook = load_workbook(filename=path_file)
+    sheet = workbook.active  # open the spreadsheet and detects in what page it is
+
+    product_sell = input('Type the code of the product to be sold')
+    product_sell = str(product_sell)
+    product_sell = f'#{product_sell}'
+    if len(product_sell) < 6 or len(product_sell) > 6:
+        print('The code typed is not a valid code')
+        sell()
+    for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):
+        for ids in items:
+            if ids != product_sell:
+                print('Product not registered')
+                choice = input('Do you want to register this product now? y/n')
+
+                x = choices(choice)
+                if x == 1:
+                    product_registration()
+                elif x == 2:
+                    choice = input('Do you want to sell another product? y/n')
+                    y = choices(choice)
+                    if y == 1:
+                        sell()
+                    elif y == 2:
+                        exit()
+            else:
+        # read qrcode and extract price
+
+
 os.chdir('output')
 product_registration()
+
+
