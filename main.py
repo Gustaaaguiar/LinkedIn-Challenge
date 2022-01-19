@@ -2,6 +2,7 @@ import random
 import qrcode
 from openpyxl import load_workbook
 import secrets
+import os
 
 # declaring the variables globally
 item_name = ''
@@ -12,6 +13,7 @@ item_ID = ''
 special_char = '!@#$%&*-+?='
 letters = 'abcdefghijklmnopqrstuvwxyz'
 numbers = '0123456789'
+path_file = 'products.xlsx'
 
 
 def loop():
@@ -62,13 +64,13 @@ def remove(sheet, row):
 
 
 def checking():  # check if there's any empty cell and delete it
-    workbook = load_workbook(filename='products.xlsx', data_only=True)
+    workbook = load_workbook(filename=path_file, data_only=True)
     sheet = workbook.active
 
     for row in sheet:
         remove(sheet, row)
 
-    workbook.save(filename='products.xlsx')
+    workbook.save(filename=path_file)
 
 
 def set_name():
@@ -79,7 +81,7 @@ def set_name():
         print('Name cannot be null')
         set_name()
 
-    workbook = load_workbook(filename='products.xlsx', data_only=True)
+    workbook = load_workbook(filename=path_file, data_only=True)
     sheet = workbook.active
 
     for items in sheet.iter_cols(min_col=2, max_col=2, values_only=True):
@@ -122,7 +124,7 @@ def set_ID():
         ID += str(number)  # get the 'number' variable and append it to the 'ID' variable
     item_ID = f'#{ID}'  # just put a '#' before the ID
 
-    workbook = load_workbook(filename='products.xlsx', data_only=True)
+    workbook = load_workbook(filename=path_file, data_only=True)
     sheet = workbook.active
 
     for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):  # check if the ID is available and change
@@ -133,6 +135,7 @@ def set_ID():
 
 
 def create_qr():
+    print(os.getcwd())
     qr = qrcode.QRCode(
         version=1,  # determines the size of the qrcode
         error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -145,11 +148,11 @@ def create_qr():
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
 
-    img.save(f'qrcodes/product {item_ID}.png')  # saves the image as and .png file on the folder qrcodes
+    img.save(f"qrcode/ {item_ID}.png")  # saves the image as and .png file on the folder qrcodes
 
 
 def add_to_spreadsheet():
-    workbook = load_workbook(filename='products.xlsx')
+    workbook = load_workbook(filename=path_file)
     sheet = workbook.active  # open the spreadsheet and detects in what page it is
 
     column = sheet['B']
@@ -160,23 +163,24 @@ def add_to_spreadsheet():
     sheet[f"D{last_column}"] = item_quantity
     sheet[f"E{last_column}"] = item_ID
 
-    workbook.save(filename='products.xlsx')  # save the spreadsheet
+    workbook.save(filename=path_file)  # save the spreadsheet
 
 
 def product_registration():  # just run all the important functions
     global item_name, item_description, item_price, item_quantity, item_ID
+
     checking()
     set_name()
     item_description = input('Type a description for the product (optional): ')
     set_price()
     set_quantity()
     set_ID()
-    create_qr()
     add_to_spreadsheet()
-
+    create_qr()
     print(f'Item name: {item_name}\nItem description: {item_description}\nItem price: {item_price}\nItem quantity: '
           f'{item_quantity}\nItem ID: {item_ID}')  # print the data inserted to ease the view of it
     loop()
 
 
+os.chdir('output')
 product_registration()

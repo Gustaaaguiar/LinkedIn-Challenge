@@ -4,12 +4,11 @@
 # spreadsheet
 # half done
 
+# transform the excel into a data frame to be able to handle it easier and doesn't return error when trying to add a
+#product while the excel is open
 
-from openpyxl import load_workbook
 
-workbook = load_workbook(filename='products.xlsx', data_only=True)
-sheet = workbook.active
+import os
+os.chdir('..')
 
-for items in sheet.iter_cols(min_col=2, max_col=2, values_only=True):
-    for products in items:
-        print(products)
+print(os.getcwd())
