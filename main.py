@@ -3,6 +3,7 @@ import qrcode
 from openpyxl import load_workbook
 import secrets
 import os
+import cv2
 import pandas as pd
 
 # declaring the variables globally
@@ -204,27 +205,36 @@ def sell():  # wip
     if len(product_sell) < 6 or len(product_sell) > 6:
         print('The code typed is not a valid code')
         sell()
-    for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):
-        for ids in items:
-            if ids != product_sell:
-                print('Product not registered')
-                choice = input('Do you want to register this product now? y/n')
+    else:
+        for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):  # checking the ID column
+            for ids in items:
+                if ids != product_sell:
+                    print('Product not registered')
+                    choice = input('Do you want to register this product now? y/n')
 
-                x = choices(choice)
-                if x == 1:
-                    product_registration()
-                elif x == 2:
-                    choice = input('Do you want to sell another product? y/n')
-                    y = choices(choice)
-                    if y == 1:
-                        sell()
-                    elif y == 2:
-                        exit()
-            else:
-        # read qrcode and extract price
+                    x = choices(choice)
+
+                    if x == 1:
+                        product_registration()
+                    elif x == 2:
+                        choice = input('Do you want to sell another product? y/n')
+                        y = choices(choice)
+                        if y == 1:
+                            sell()
+                        elif y == 2:
+                            exit()
+                else:  # read the data from the qrcode
+                    os.chdir('output/qrcode')
+
+                    img = cv2.imread(f'{product_sell}.png')
+                    det = cv2.QRCodeDetector()
+                    val, pts, st_code = det.detectAndDecode(img)  # 'val' variable is the one with the data of the
+                    # qrcode
+
+                    qt = int(input('How many of these you want to sell? '))
 
 
-os.chdir('output')
+
 product_registration()
 
 

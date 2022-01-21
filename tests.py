@@ -1,9 +1,11 @@
-# add users with password to be able to add products
-
-# add a system to sell the items and automatically calculate the final price and remove the right quantity of the
-# spreadsheet
-# half done
-
-
 # read qrcode
 
+import cv2
+import os
+
+os.chdir('output/qrcode')
+
+img = cv2.imread("#66743.png")
+det = cv2.QRCodeDetector()
+val, pts, st_code = det.detectAndDecode(img)
+print(val)
