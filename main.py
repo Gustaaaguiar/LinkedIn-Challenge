@@ -262,7 +262,7 @@ def sell(sel_row):
 
     out.pop(0)
 
-    if out[2] <=0:
+    if out[2] <= 0:
         print('Product not available in our stock')
         choice = input('Do you want to sell another product? y/n\n')
 
