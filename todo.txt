@@ -1,4 +1,9 @@
-    add users with password to be able to add products
+    Add users with password to be able to add products
 
-    add a system to sell the items and automatically calculate the final price and remove the right quantity of the
-    spreadsheet (half done)
+    Add error handling for the error: 'PermissionError: [Errno 13] Permission denied: 'products.xlsx'', wich means
+    the spreadsheet is open
+
+    Error with file pathing (added an os.chdir('output') at the beginning of the code and didn't get any error yet)
+
+    Sell module can't compare spreadsheet with the entered ID. (substitute the '#' with a ' ' and try)
+

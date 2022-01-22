@@ -16,6 +16,7 @@ special_char = '!@#$%&*-+?='
 letters = 'abcdefghijklmnopqrstuvwxyz'
 numbers = '0123456789'
 path_file = 'products.xlsx'
+final_quantity = 0
 
 
 def choices(choice):
@@ -77,6 +78,9 @@ def remove(sheet, row):
 
 
 def checking():  # check if there's any empty cell and delete it
+    # if os.getcwd() != 'E:\PythonProjs\LinkerdIn-challenge\output':
+    #     os.chdir('output')
+
     workbook = load_workbook(filename=path_file, data_only=True)
     sheet = workbook.active
 
@@ -148,7 +152,6 @@ def set_ID():
 
 
 def create_qr():
-    print(os.getcwd())
     qr = qrcode.QRCode(
         version=1,  # determines the size of the qrcode
         error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -196,45 +199,73 @@ def product_registration():  # just run all the important functions
 
 
 def sell():  # wip
+    # os.chdir('output')
     workbook = load_workbook(filename=path_file)
     sheet = workbook.active  # open the spreadsheet and detects in what page it is
 
-    product_sell = input('Type the code of the product to be sold')
-    product_sell = str(product_sell)
+    out = []  # auxiliary list
+
+    row = 0
+
+    product_sell = str(input('Type the code of the product to be sold: '))
     product_sell = f'#{product_sell}'
-    if len(product_sell) < 6 or len(product_sell) > 6:
+    if len(product_sell) < 6 or len(product_sell) > 6:  # check if it's a valid code
         print('The code typed is not a valid code')
         sell()
-    else:
+    else:  # the code is right, then
         for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):  # checking the ID column
             for ids in items:
-                if ids != product_sell:
+                if ids != product_sell:  # check if product is registered
                     print('Product not registered')
                     choice = input('Do you want to register this product now? y/n')
 
                     x = choices(choice)
 
-                    if x == 1:
+                    if x == 1:  # register the product
                         product_registration()
-                    elif x == 2:
+                    elif x == 2:  # sell another product?
                         choice = input('Do you want to sell another product? y/n')
                         y = choices(choice)
                         if y == 1:
                             sell()
                         elif y == 2:
                             exit()
-                else:  # read the data from the qrcode
-                    os.chdir('output/qrcode')
+                        else:
+                            print('Please select a valid answer')
+                            sell()
+                else:  # if the product is registered, it's gonna continue with the selling
+                    os.chdir('qrcode')
 
+                    # read the data from the qrcode
                     img = cv2.imread(f'{product_sell}.png')
                     det = cv2.QRCodeDetector()
                     val, pts, st_code = det.detectAndDecode(img)  # 'val' variable is the one with the data of the
                     # qrcode
 
+                    # check the row of the product to be sold
+                    for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):
+                        for ids in items:
+                            if ids == product_sell:
+                                row = ids  # get the row of the product to check all the information
+
+                    for c in range(5):
+                        out.append(sheet.cell(3, c + 1).value)  # append all the product information in a list
+
+                    out.pop(0)  # remove the first element of the list (just a '-')
+
+                    name, price, quantity = out[0], float(out[1]), out[2]  # get the name, price and quantity
+                    # of the item
+
                     qt = int(input('How many of these you want to sell? '))
 
+                    final_price = qt*price
+
+                    final_quantity = quantity - qt
+                    sheet[f"D{row}"] = final_quantity
+
+                    sell()
 
 
-product_registration()
-
+os.chdir('output')
+sell()
 
