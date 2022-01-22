@@ -3,8 +3,7 @@ import qrcode
 from openpyxl import load_workbook
 import secrets
 import os
-import cv2
-import pandas as pd
+
 
 # declaring the variables globally
 item_name = ''
@@ -15,7 +14,7 @@ item_ID = ''
 special_char = '!@#$%&*-+?='
 letters = 'abcdefghijklmnopqrstuvwxyz'
 numbers = '0123456789'
-path_file = 'products.xlsx'
+name_file = 'products.xlsx'
 final_quantity = 0
 
 
@@ -53,7 +52,7 @@ def register_user():
 
     elif regis == 2:
         alphabet = letters + letters.upper() + special_char + numbers
-        password = password.join(secrets.choice(alphabet) for i in range(10))  # generate password with the number of
+        password = password.join(secrets.choice(alphabet) for _ in range(10))  # generate password with the number of
         # digits I want
         print(f'Your password is: {password}')  # register the password
 
@@ -81,13 +80,13 @@ def checking():  # check if there's any empty cell and delete it
     # if os.getcwd() != 'E:\PythonProjs\LinkerdIn-challenge\output':
     #     os.chdir('output')
 
-    workbook = load_workbook(filename=path_file, data_only=True)
+    workbook = load_workbook(filename=name_file, data_only=True)
     sheet = workbook.active
 
     for row in sheet:
         remove(sheet, row)
 
-    workbook.save(filename=path_file)
+    workbook.save(filename=name_file)
 
 
 def set_name():
@@ -98,7 +97,7 @@ def set_name():
         print('Name cannot be null')
         set_name()
 
-    workbook = load_workbook(filename=path_file, data_only=True)
+    workbook = load_workbook(filename=name_file, data_only=True)
     sheet = workbook.active
 
     for items in sheet.iter_cols(min_col=2, max_col=2, values_only=True):
@@ -141,7 +140,7 @@ def set_ID():
         ID += str(number)  # get the 'number' variable and append it to the 'ID' variable
     item_ID = f'#{ID}'  # just put a '#' before the ID
 
-    workbook = load_workbook(filename=path_file, data_only=True)
+    workbook = load_workbook(filename=name_file, data_only=True)
     sheet = workbook.active
 
     for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):  # check if the ID is available and change
@@ -168,7 +167,7 @@ def create_qr():
 
 
 def add_to_spreadsheet():
-    workbook = load_workbook(filename=path_file)
+    workbook = load_workbook(filename=name_file)
     sheet = workbook.active  # open the spreadsheet and detects in what page it is
 
     column = sheet['B']
@@ -179,7 +178,7 @@ def add_to_spreadsheet():
     sheet[f"D{last_column}"] = item_quantity
     sheet[f"E{last_column}"] = item_ID
 
-    workbook.save(filename=path_file)  # save the spreadsheet
+    workbook.save(filename=name_file)  # save the spreadsheet
 
 
 def product_registration():  # just run all the important functions
@@ -198,74 +197,93 @@ def product_registration():  # just run all the important functions
     loop()
 
 
-def sell():  # wip
-    # os.chdir('output')
-    workbook = load_workbook(filename=path_file)
+def checking_sell():  # wip
+    workbook = load_workbook(filename=name_file)
     sheet = workbook.active  # open the spreadsheet and detects in what page it is
 
-    out = []  # auxiliary list
+    row = 1
 
-    row = 0
+    # inputting the code
+    product = str(input('Type the code of the product: '))
+    product = f'#{product}'
 
-    product_sell = str(input('Type the code of the product to be sold: '))
-    product_sell = f'#{product_sell}'
-    if len(product_sell) < 6 or len(product_sell) > 6:  # check if it's a valid code
-        print('The code typed is not a valid code')
-        sell()
-    else:  # the code is right, then
+    # checking if the code is valid
+    if len(product) != 6:
+        print('The code inserted is invalid!')
+        checking_sell()
+
+    else:
         for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):  # checking the ID column
             for ids in items:
-                if ids != product_sell:  # check if product is registered
-                    print('Product not registered')
-                    choice = input('Do you want to register this product now? y/n')
+                if ids == product:
+                    sell(row)
+                    break
+                else:
+                    row += 1
+                    if sheet.max_row != row:
+                        pass
+                    else:
+                        print('The code does not correspond to a registered product!')
+                        choice = input('Do you want to register a new product? y/n')
 
-                    x = choices(choice)
+                        x = choices(choice)
 
-                    if x == 1:  # register the product
-                        product_registration()
-                    elif x == 2:  # sell another product?
-                        choice = input('Do you want to sell another product? y/n')
-                        y = choices(choice)
-                        if y == 1:
-                            sell()
-                        elif y == 2:
-                            exit()
+                        if x == 1:
+                            product_registration()
+                        elif x == 2:
+                            choice = input('Do you want to sell another product? y/n')
+
+                            y = choices(choice)
+
+                            if y == 1:
+                                checking_sell()
+                            elif y == 2:
+                                exit()
+                            else:
+                                print('Please type a valid answer!')
+                                choices(choice)
                         else:
-                            print('Please select a valid answer')
-                            sell()
-                else:  # if the product is registered, it's gonna continue with the selling
-                    os.chdir('qrcode')
+                            print('Please type a valid answer!')
+                            choices(choice)
 
-                    # read the data from the qrcode
-                    img = cv2.imread(f'{product_sell}.png')
-                    det = cv2.QRCodeDetector()
-                    val, pts, st_code = det.detectAndDecode(img)  # 'val' variable is the one with the data of the
-                    # qrcode
 
-                    # check the row of the product to be sold
-                    for items in sheet.iter_cols(min_col=5, max_col=5, values_only=True):
-                        for ids in items:
-                            if ids == product_sell:
-                                row = ids  # get the row of the product to check all the information
+def sell(sel_row):
+    global final_quantity
 
-                    for c in range(5):
-                        out.append(sheet.cell(3, c + 1).value)  # append all the product information in a list
+    workbook = load_workbook(filename=name_file)
+    sheet = workbook.active  # open the spreadsheet and detects in what page it is
 
-                    out.pop(0)  # remove the first element of the list (just a '-')
+    price = 0
 
-                    name, price, quantity = out[0], float(out[1]), out[2]  # get the name, price and quantity
-                    # of the item
+    out = []
 
-                    qt = int(input('How many of these you want to sell? '))
+    for c in range(1, sheet.max_column + 1):
+        out.append(sheet.cell(sel_row, c).value)
 
-                    final_price = qt*price
+    out.pop(0)
 
-                    final_quantity = quantity - qt
-                    sheet[f"D{row}"] = final_quantity
+    qt_sold = int(input('Type the quantity to be sold'))
 
-                    sell()
+    item_pr = int(out[1])
+    price += qt_sold*item_pr
+
+    final_quantity = qt_sold-out[2]
+    sheet[f'D{sel_row}'] = final_quantity
+
+    workbook.save(filename=name_file)
+
+    choice = input('Do you want to sell another product? y/n')
+
+    x = choices(choice)
+
+    if x == 1:
+        checking_sell()
+    elif x == 2:
+        exit()
+    else:
+        print('Please type a valid answer!')
+        choices(choice)
 
 
 os.chdir('output')
-sell()
-
+checking_sell()

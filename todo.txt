@@ -3,7 +3,15 @@
     Add error handling for the error: 'PermissionError: [Errno 13] Permission denied: 'products.xlsx'', wich means
     the spreadsheet is open
 
-    Error with file pathing (added an os.chdir('output') at the beginning of the code and didn't get any error yet)
 
-    Sell module can't compare spreadsheet with the entered ID. (substitute the '#' with a ' ' and try)
+    Sell module:
+    get the code (Done)
+    check if the code is valid (Done)
+    check if the code is registered (Done!!!!!!!!!!!!!!!!)
+    get the information according to the code (Done)
+    get the number of items to be sold (Done)
+    calculate the price (Done?)
+    calculate the new quantity in stock (Done)
+    put the new quantity inside the spreadsheet (Done)
+
 
