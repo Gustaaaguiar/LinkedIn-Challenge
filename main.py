@@ -262,27 +262,61 @@ def sell(sel_row):
 
     out.pop(0)
 
-    qt_sold = int(input('Type the quantity to be sold'))
+    if out[2] <=0:
+        print('Product not available in our stock')
+        choice = input('Do you want to sell another product? y/n\n')
 
-    item_pr = int(out[1])
-    price += qt_sold*item_pr
+        x = choices(choice)
 
-    final_quantity = qt_sold-out[2]
-    sheet[f'D{sel_row}'] = final_quantity
-
-    workbook.save(filename=name_file)
-
-    choice = input('Do you want to sell another product? y/n')
-
-    x = choices(choice)
-
-    if x == 1:
-        checking_sell()
-    elif x == 2:
-        exit()
+        if x == 1:
+            checking_sell()
+        elif x == 2:
+            exit()
+        else:
+            print('Please type a valid answer!')
+            choices(choice)
     else:
-        print('Please type a valid answer!')
-        choices(choice)
+        qt_sold = int(input('Type the quantity to be sold: '))
+
+        if qt_sold > out[2]:
+            print('The quantity to be sold is not available in our stock!')
+
+            choice = input('Do you want to sell another product? y/n\n')
+
+            x = choices(choice)
+
+            if x == 1:
+                checking_sell()
+            elif x == 2:
+                exit()
+            else:
+                print('Please type a valid answer!')
+                choices(choice)
+        else:
+            item_pr = float(out[1])
+            price += qt_sold*item_pr
+            price = "{:.2f}".format(price)
+
+            final_quantity = qt_sold-out[2]
+            sheet[f'D{sel_row}'] = final_quantity
+
+            workbook.save(filename=name_file)
+
+            choice = input('Do you want to sell another product? y/n\n')
+
+            x = choices(choice)
+
+            if x == 1:
+                checking_sell()
+            elif x == 2:
+                price = str(price)
+                price = price.replace('.', ',')
+                print(f'The final price is R${price}')
+                input('Press enter to exit.')
+                exit()
+            else:
+                print('Please type a valid answer!')
+                choices(choice)
 
 
 os.chdir('output')

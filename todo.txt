@@ -3,15 +3,9 @@
     Add error handling for the error: 'PermissionError: [Errno 13] Permission denied: 'products.xlsx'', wich means
     the spreadsheet is open
 
+    RecursionError: maximum recursion depth exceeded while calling a Python object (digit an ' ' before typing 'y' or 'n'
 
-    Sell module:
-    get the code (Done)
-    check if the code is valid (Done)
-    check if the code is registered (Done!!!!!!!!!!!!!!!!)
-    get the information according to the code (Done)
-    get the number of items to be sold (Done)
-    calculate the price (Done?)
-    calculate the new quantity in stock (Done)
-    put the new quantity inside the spreadsheet (Done)
+    After registering a product it does not continue to the selling module
+
 
 
